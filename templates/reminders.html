@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Task Reminders</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container my-4">
+        <h1 class="text-center">Pending Task Reminders</h1>
+
+        <!-- Check if there are any pending tasks -->
+        {% if tasks %}
+            <ul class="list-group mt-4">
+                {% for task in tasks %}
+                    <li class="list-group-item">
+                        <strong>{{ task.name }}</strong> - Due: {{ task.due_date.strftime('%Y-%m-%d') }}<br>
+                        Assigned to: {{ task.member.name if task.member else 'Unassigned' }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-center mt-4">No pending tasks for today!</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-primary">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

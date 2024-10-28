@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container my-5">
+        <h1 class="text-center">To-Do</h1>
+
+        <h2>Create Organization</h2>
+        <form action="/add_organization" method="POST" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" name="org_name" placeholder="Organization Name" required>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Add Organization</button>
+                </div>
+            </div>
+        </form>
+
+        <h2>Organizations</h2>
+        {% for org in organizations %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="mb-0">{{ org.name }}</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/add_member/{{ org.id }}" method="POST" class="mb-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="member_name" placeholder="Member Name" required>
+                            <input type="email" class="form-control" name="member_email" placeholder="Member Email" required>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-secondary">Add Member</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <ul class="list-group">
+                        {% for member in org.members %}
+                            <li class="list-group-item">
+                                <div>{{ member.name }} ({{ member.email }})</div>
+                                <form action="/add_task/{{ member.id }}" method="POST" class="mt-2">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="task_name" placeholder="Task Name" required>
+                                        <input type="date" name="due_date" class="form-control" required>
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-warning">Add Task</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+
+        <h2>All Tasks</h2>
+        <ul class="list-group">
+            {% for task in tasks %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        {{ task.name }} - Due: {{ task.due_date }} - Assigned to: {{ task.member.name if task.member else 'Unassigned' }}
+                    </div>
+                    {% if not task.completed %}
+                        <a href="/complete_task/{{ task.id }}" class="btn btn-success btn-sm">Complete</a>
+                    {% else %}
+                        <span class="badge badge-success">Completed</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="text-center mt-4">
+            <a href="/reminders" class="btn btn-info">Pending Tasks Reminders</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
